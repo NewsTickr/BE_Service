@@ -24,7 +24,7 @@ public class CommentController {
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "User 댓글 조회", description = "사용자가 작성한 댓글을 리스트형태로 조회합니다.")
-    public ResponseEntity<List<CommentResponse>> getUserComment(@PathVariable String userId) {
+    public ResponseEntity<List<CommentResponse>> getUserComment(@PathVariable Long userId) {
         List<com.newstickr.newstickr.comment.dto.CommentResponse> response = commentService.getAllCommentsByUserId(userId);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }

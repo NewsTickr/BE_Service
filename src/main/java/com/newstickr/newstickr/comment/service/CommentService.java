@@ -65,8 +65,8 @@ public class CommentService {
         throw new RuntimeException("No comment with id " + commentId); // 404 처리
     }
     // 특정 사용자가 쓴 댓글 모두 조회
-    public List<CommentResponse> getAllCommentsByUserId(String userId) {
-        List<Comment> commentList =  commentRepository.findByUser_UserId(userId);
+    public List<CommentResponse> getAllCommentsByUserId(Long userId) {
+        List<Comment> commentList =  commentRepository.findByUser_Id(userId);
         return getCommentResponses(commentList);
     }
     // 특정 기사의 댓글 모두 조회
