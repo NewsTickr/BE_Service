@@ -3,9 +3,9 @@ package com.newstickr.newstickr.comment.service;
 import com.newstickr.newstickr.comment.dto.CommentRequest;
 import com.newstickr.newstickr.comment.dto.CommentResponse;
 import com.newstickr.newstickr.comment.entity.Comment;
-import com.newstickr.newstickr.comment.entity.News;
 import com.newstickr.newstickr.comment.repository.CommentRepository;
-import com.newstickr.newstickr.comment.repository.NewsRepository;
+import com.newstickr.newstickr.news.entity.News;
+import com.newstickr.newstickr.news.repository.NewsRepository;
 import com.newstickr.newstickr.user.entity.User;
 import com.newstickr.newstickr.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class CommentService {
     private UserRepository userRepository;
 
     // 댓글 추가
-    public Comment addComment(Long newsId, CommentRequest commentRequest) {
+    public void addComment(Long newsId, CommentRequest commentRequest) {
         Optional<User> optionalUser = userRepository.findById(commentRequest.getUserId());
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
@@ -43,7 +43,7 @@ public class CommentService {
             comment.setContent(URLEncoder.encode(commentRequest.getContent(), StandardCharsets.UTF_8));
             comment.setUser(user);
             comment.setNews(news);
-            return commentRepository.save(comment);
+            commentRepository.save(comment);
         }catch(Exception e){
             throw new RuntimeException(e);}
     }

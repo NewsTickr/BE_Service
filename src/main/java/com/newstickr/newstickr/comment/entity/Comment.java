@@ -1,5 +1,6 @@
 package com.newstickr.newstickr.comment.entity;
 
+import com.newstickr.newstickr.news.entity.News;
 import com.newstickr.newstickr.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
