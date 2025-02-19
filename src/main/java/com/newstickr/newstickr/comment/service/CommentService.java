@@ -4,10 +4,10 @@ import com.newstickr.newstickr.comment.dto.CommentRequest;
 import com.newstickr.newstickr.comment.dto.CommentResponse;
 import com.newstickr.newstickr.comment.entity.Comment;
 import com.newstickr.newstickr.comment.entity.News;
-import com.newstickr.newstickr.comment.entity.User;
 import com.newstickr.newstickr.comment.repository.CommentRepository;
 import com.newstickr.newstickr.comment.repository.NewsRepository;
-import com.newstickr.newstickr.comment.repository.UserRepository;
+import com.newstickr.newstickr.user.entity.User;
+import com.newstickr.newstickr.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +28,16 @@ public class CommentService {
 
     // 댓글 추가
     public Comment addComment(Long newsId, CommentRequest commentRequest) {
-        Optional<User> optionalUser = userRepository.findByUserId(commentRequest.getUserId());
+        Optional<User> optionalUser = userRepository.findById(commentRequest.getUserId());
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-        com.newstickr.newstickr.comment.entity.User user = optionalUser.get();
+        User user = optionalUser.get();
         Optional<News> optionalNews = newsRepository.findById(newsId);
         if(optionalNews.isEmpty()) {
             throw new RuntimeException("News not found");
         }
-        com.newstickr.newstickr.comment.entity.News news = optionalNews.get();
+        News news = optionalNews.get();
         try{
             Comment comment = new Comment();
             comment.setContent(URLEncoder.encode(commentRequest.getContent(), StandardCharsets.UTF_8));
@@ -57,9 +57,9 @@ public class CommentService {
             commentResponse.setContent(comment.getContent());
             commentResponse.setLikeCount(comment.getLikeCount());
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-            commentResponse.setUserId(comment.getUser().getUserId());
-            commentResponse.setUserPhoto(comment.getUser().getUserPhoto());
-            commentResponse.setUserName(comment.getUser().getUserNickname());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
             return commentResponse;
         }
         throw new RuntimeException("No comment with id " + commentId); // 404 처리
@@ -83,9 +83,9 @@ public class CommentService {
             commentResponse.setContent(comment.getContent());
             commentResponse.setLikeCount(comment.getLikeCount());
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-            commentResponse.setUserId(comment.getUser().getUserId());
-            commentResponse.setUserPhoto(comment.getUser().getUserPhoto());
-            commentResponse.setUserName(comment.getUser().getUserNickname());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
 
             response.add(commentResponse);
         }
