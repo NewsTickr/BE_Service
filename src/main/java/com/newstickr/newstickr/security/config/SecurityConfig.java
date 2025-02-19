@@ -1,9 +1,9 @@
-package com.newstickr.newstickr.config;
+package com.newstickr.newstickr.security.config;
 
-import com.newstickr.newstickr.jwt.JWTFilter;
-import com.newstickr.newstickr.jwt.JWTUtil;
-import com.newstickr.newstickr.oauth2.CustomSuccessHandler;
-import com.newstickr.newstickr.service.CustomOAuth2UserService;
+import com.newstickr.newstickr.security.jwt.JWTFilter;
+import com.newstickr.newstickr.security.jwt.JWTUtil;
+import com.newstickr.newstickr.security.oauth2.CustomSuccessHandler;
+import com.newstickr.newstickr.user.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,11 +1,11 @@
-package com.newstickr.newstickr.service;
+package com.newstickr.newstickr.user.service;
 
-import com.newstickr.newstickr.dto.CustomOAuth2User;
-import com.newstickr.newstickr.dto.NaverResponse;
-import com.newstickr.newstickr.dto.OAuth2Response;
-import com.newstickr.newstickr.dto.UserDTO;
-import com.newstickr.newstickr.entity.User;
-import com.newstickr.newstickr.repository.UserRepository;
+import com.newstickr.newstickr.user.dto.CustomOAuth2User;
+import com.newstickr.newstickr.user.dto.NaverResponse;
+import com.newstickr.newstickr.user.dto.OAuth2Response;
+import com.newstickr.newstickr.user.dto.UserDTO;
+import com.newstickr.newstickr.user.entity.User;
+import com.newstickr.newstickr.user.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

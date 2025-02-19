@@ -1,7 +1,7 @@
-package com.newstickr.newstickr.jwt;
+package com.newstickr.newstickr.security.jwt;
 
-import com.newstickr.newstickr.dto.CustomOAuth2User;
-import com.newstickr.newstickr.dto.UserDTO;
+import com.newstickr.newstickr.user.dto.CustomOAuth2User;
+import com.newstickr.newstickr.user.dto.UserDTO;
 
 import jakarta.servlet.*;
 import jakarta.servlet.ServletException;

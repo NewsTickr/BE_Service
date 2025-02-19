@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.dto;
+package com.newstickr.newstickr.user.dto;
 
 import java.util.Map;
 

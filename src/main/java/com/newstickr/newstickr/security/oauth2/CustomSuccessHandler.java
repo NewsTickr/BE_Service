@@ -1,7 +1,7 @@
-package com.newstickr.newstickr.oauth2;
+package com.newstickr.newstickr.security.oauth2;
 
-import com.newstickr.newstickr.dto.CustomOAuth2User;
-import com.newstickr.newstickr.jwt.JWTUtil;
+import com.newstickr.newstickr.user.dto.CustomOAuth2User;
+import com.newstickr.newstickr.security.jwt.JWTUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

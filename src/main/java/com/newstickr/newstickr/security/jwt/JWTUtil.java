@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.jwt;
+package com.newstickr.newstickr.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.dto;
+package com.newstickr.newstickr.user.dto;
 
 public interface OAuth2Response {
 

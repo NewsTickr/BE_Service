@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.entity;
+package com.newstickr.newstickr.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
