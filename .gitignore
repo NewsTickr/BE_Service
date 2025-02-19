@@ -61,7 +61,6 @@ application*.json
 *.pem
 *.crt
 secrets/
-config/
 .DS_Store
 
 ### Docker ###

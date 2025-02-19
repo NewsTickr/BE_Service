@@ -12,7 +12,7 @@ public record ResGetNewsDto(
 ) {
     public static ResGetNewsDto fromEntity(News news) {
         return new ResGetNewsDto(
-                news.getNews_id(),
+                news.getNewsId(),
                 news.getLink(),
                 news.getTitle(),
                 news.getDescription(),
