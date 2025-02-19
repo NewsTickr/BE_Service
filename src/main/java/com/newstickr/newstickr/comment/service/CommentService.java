@@ -1,13 +1,13 @@
-package com.newstickr.newstickr.service;
+package com.newstickr.newstickr.comment.service;
 
-import com.newstickr.newstickr.dto.CommentRequest;
-import com.newstickr.newstickr.dto.CommentResponse;
-import com.newstickr.newstickr.entity.Comment;
-import com.newstickr.newstickr.entity.News;
-import com.newstickr.newstickr.entity.User;
-import com.newstickr.newstickr.repository.CommentRepository;
-import com.newstickr.newstickr.repository.NewsRepository;
-import com.newstickr.newstickr.repository.UserRepository;
+import com.newstickr.newstickr.comment.dto.CommentRequest;
+import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.entity.Comment;
+import com.newstickr.newstickr.comment.entity.News;
+import com.newstickr.newstickr.comment.entity.User;
+import com.newstickr.newstickr.comment.repository.CommentRepository;
+import com.newstickr.newstickr.comment.repository.NewsRepository;
+import com.newstickr.newstickr.comment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +32,12 @@ public class CommentService {
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-        User user = optionalUser.get();
+        com.newstickr.newstickr.comment.entity.User user = optionalUser.get();
         Optional<News> optionalNews = newsRepository.findById(newsId);
         if(optionalNews.isEmpty()) {
             throw new RuntimeException("News not found");
         }
-        News news = optionalNews.get();
+        com.newstickr.newstickr.comment.entity.News news = optionalNews.get();
         try{
             Comment comment = new Comment();
             comment.setContent(URLEncoder.encode(commentRequest.getContent(), StandardCharsets.UTF_8));

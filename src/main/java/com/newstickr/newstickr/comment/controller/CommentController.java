@@ -1,8 +1,9 @@
-package com.newstickr.newstickr.controller;
+package com.newstickr.newstickr.comment.controller;
 
-import com.newstickr.newstickr.dto.CommentRequest;
-import com.newstickr.newstickr.dto.CommentResponse;
-import com.newstickr.newstickr.service.CommentService;
+
+import com.newstickr.newstickr.comment.dto.CommentRequest;
+import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,18 @@ public class CommentController {
     @GetMapping("/user/{userId}")
     @Operation(summary = "User 댓글 조회", description = "사용자가 작성한 댓글을 리스트형태로 조회합니다.")
     public ResponseEntity<List<CommentResponse>> getUserComment(@PathVariable String userId) {
-        List<CommentResponse> response = commentService.getAllCommentsByUserId(userId);
+        List<com.newstickr.newstickr.comment.dto.CommentResponse> response = commentService.getAllCommentsByUserId(userId);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
     @GetMapping("/news/{newsId}")
-    public ResponseEntity<List<CommentResponse>> getNewsComment(@PathVariable String newsId) {
-        List<CommentResponse> response = commentService.getAllCommentsByNewsId(Long.parseLong(newsId));
+    public ResponseEntity<List<com.newstickr.newstickr.comment.dto.CommentResponse>> getNewsComment(@PathVariable String newsId) {
+        List<com.newstickr.newstickr.comment.dto.CommentResponse> response = commentService.getAllCommentsByNewsId(Long.parseLong(newsId));
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommentResponse> getComment(@PathVariable String commentId) {
+    public ResponseEntity<com.newstickr.newstickr.comment.dto.CommentResponse> getComment(@PathVariable String commentId) {
         try{
-           CommentResponse response = commentService.getComment(Long.parseLong(commentId));
+           com.newstickr.newstickr.comment.dto.CommentResponse response = commentService.getComment(Long.parseLong(commentId));
             return ResponseEntity.status(HttpStatus.FOUND).body(response);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -53,7 +54,7 @@ public class CommentController {
     }
 
     @PatchMapping("/")
-    public ResponseEntity<Object> updateComment(@RequestParam("commentId") Long commentId, @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<Object> updateComment(@RequestParam("commentId") Long commentId, @RequestBody com.newstickr.newstickr.comment.dto.CommentRequest commentRequest) {
         boolean result = commentService.updateComment(commentId,commentRequest);
         if (result) {
             return ResponseEntity.status(HttpStatus.OK).body(null);

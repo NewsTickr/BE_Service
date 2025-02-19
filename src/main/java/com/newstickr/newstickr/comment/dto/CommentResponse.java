@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.dto;
+package com.newstickr.newstickr.comment.dto;
 
 import lombok.Data;
 

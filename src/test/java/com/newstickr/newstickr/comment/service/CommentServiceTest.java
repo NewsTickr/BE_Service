@@ -1,13 +1,13 @@
-package com.newstickr.newstickr.service;
+package com.newstickr.newstickr.comment.service;
 
-import com.newstickr.newstickr.dto.CommentRequest;
-import com.newstickr.newstickr.dto.CommentResponse;
-import com.newstickr.newstickr.entity.Comment;
-import com.newstickr.newstickr.entity.News;
-import com.newstickr.newstickr.entity.User;
-import com.newstickr.newstickr.repository.CommentRepository;
-import com.newstickr.newstickr.repository.NewsRepository;
-import com.newstickr.newstickr.repository.UserRepository;
+import com.newstickr.newstickr.comment.dto.CommentRequest;
+import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.entity.Comment;
+import com.newstickr.newstickr.comment.entity.News;
+import com.newstickr.newstickr.comment.entity.User;
+import com.newstickr.newstickr.comment.repository.CommentRepository;
+import com.newstickr.newstickr.comment.repository.NewsRepository;
+import com.newstickr.newstickr.comment.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

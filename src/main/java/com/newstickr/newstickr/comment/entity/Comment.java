@@ -1,4 +1,4 @@
-package com.newstickr.newstickr.entity;
+package com.newstickr.newstickr.comment.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

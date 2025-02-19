@@ -1,6 +1,6 @@
-package com.newstickr.newstickr.repository;
+package com.newstickr.newstickr.comment.repository;
 
-import com.newstickr.newstickr.entity.News;
+import com.newstickr.newstickr.comment.entity.News;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
