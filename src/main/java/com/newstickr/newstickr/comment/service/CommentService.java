@@ -1,13 +1,13 @@
-package com.newstickr.newstickr.service;
+package com.newstickr.newstickr.comment.service;
 
-import com.newstickr.newstickr.dto.CommentRequest;
-import com.newstickr.newstickr.dto.CommentResponse;
-import com.newstickr.newstickr.entity.Comment;
-import com.newstickr.newstickr.entity.News;
-import com.newstickr.newstickr.entity.User;
-import com.newstickr.newstickr.repository.CommentRepository;
-import com.newstickr.newstickr.repository.NewsRepository;
-import com.newstickr.newstickr.repository.UserRepository;
+import com.newstickr.newstickr.comment.dto.CommentRequest;
+import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.entity.Comment;
+import com.newstickr.newstickr.comment.repository.CommentRepository;
+import com.newstickr.newstickr.news.entity.News;
+import com.newstickr.newstickr.news.repository.NewsRepository;
+import com.newstickr.newstickr.user.entity.User;
+import com.newstickr.newstickr.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,8 @@ public class CommentService {
     private UserRepository userRepository;
 
     // 댓글 추가
-    public Comment addComment(Long newsId, CommentRequest commentRequest) {
-        Optional<User> optionalUser = userRepository.findByUserId(commentRequest.getUserId());
+    public void addComment(Long newsId, CommentRequest commentRequest) {
+        Optional<User> optionalUser = userRepository.findById(commentRequest.getUserId());
         if(optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -43,7 +43,7 @@ public class CommentService {
             comment.setContent(URLEncoder.encode(commentRequest.getContent(), StandardCharsets.UTF_8));
             comment.setUser(user);
             comment.setNews(news);
-            return commentRepository.save(comment);
+            commentRepository.save(comment);
         }catch(Exception e){
             throw new RuntimeException(e);}
     }
@@ -57,16 +57,16 @@ public class CommentService {
             commentResponse.setContent(comment.getContent());
             commentResponse.setLikeCount(comment.getLikeCount());
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-            commentResponse.setUserId(comment.getUser().getUserId());
-            commentResponse.setUserPhoto(comment.getUser().getUserPhoto());
-            commentResponse.setUserName(comment.getUser().getUserNickname());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
             return commentResponse;
         }
         throw new RuntimeException("No comment with id " + commentId); // 404 처리
     }
     // 특정 사용자가 쓴 댓글 모두 조회
-    public List<CommentResponse> getAllCommentsByUserId(String userId) {
-        List<Comment> commentList =  commentRepository.findByUser_UserId(userId);
+    public List<CommentResponse> getAllCommentsByUserId(Long userId) {
+        List<Comment> commentList =  commentRepository.findByUser_Id(userId);
         return getCommentResponses(commentList);
     }
     // 특정 기사의 댓글 모두 조회
@@ -83,9 +83,9 @@ public class CommentService {
             commentResponse.setContent(comment.getContent());
             commentResponse.setLikeCount(comment.getLikeCount());
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-            commentResponse.setUserId(comment.getUser().getUserId());
-            commentResponse.setUserPhoto(comment.getUser().getUserPhoto());
-            commentResponse.setUserName(comment.getUser().getUserNickname());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
 
             response.add(commentResponse);
         }
