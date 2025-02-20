@@ -57,7 +57,15 @@ public class SecurityConfig {
 
         // CSRF 비활성화
         http.csrf(csrf -> csrf.disable());
-
+        // 경로별 인가 설정
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/swagger-ui").permitAll()
+//                .requestMatchers("/swagger-ui/**").permitAll()
+//                .requestMatchers("/news/**").permitAll()
+//                .requestMatchers("/api/comments/**").permitAll()
+                .anyRequest().authenticated()
+        );
         // 로그인 및 인증 방식 비활성화
         http.formLogin(form -> form.disable());
         http.httpBasic(basic -> basic.disable());
@@ -71,11 +79,7 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
         );
 
-        // 경로별 인가 설정
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .anyRequest().authenticated()
-        );
+
 
         // 세션 상태 설정 (STATELESS)
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
