@@ -5,6 +5,7 @@ import com.newstickr.newstickr.user.dto.NaverResponse;
 import com.newstickr.newstickr.user.dto.OAuth2Response;
 import com.newstickr.newstickr.user.dto.UserDTO;
 import com.newstickr.newstickr.user.entity.User;
+import com.newstickr.newstickr.user.enums.Role;
 import com.newstickr.newstickr.user.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -50,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setUsername(username);
             userEntity.setEmail(oAuth2Response.getEmail());
             userEntity.setName(oAuth2Response.getName());
-            userEntity.setRole("ROLE_USER");
+            userEntity.setRole(Role.USER); // 신규 사용자는 default USER
 
             userRepository.save(userEntity);
 
@@ -58,7 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             userDTO.setUsername(username);
             userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole("ROLE_USER");
+            userDTO.setRole(Role.USER.getValue());
 
             return new CustomOAuth2User(userDTO);
         }
@@ -72,7 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(existData.getUsername());
             userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole(existData.getRole());
+            userDTO.setRole(existData.getRole().getValue());
 
             return new CustomOAuth2User(userDTO);
         }

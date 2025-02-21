@@ -1,9 +1,7 @@
 package com.newstickr.newstickr.user.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.newstickr.newstickr.user.enums.Role;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +21,10 @@ public class User {
 
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role; // Enum 문자열로 저장 (USER, ADMIN)
+
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
 }
