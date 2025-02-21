@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setUsername(username);
             userEntity.setEmail(oAuth2Response.getEmail());
             userEntity.setName(oAuth2Response.getName());
-            userEntity.setRole(Role.USER);
+            userEntity.setRole(Role.USER); // 신규 사용자는 default USER
 
             userRepository.save(userEntity);
 
