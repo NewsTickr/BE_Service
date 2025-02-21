@@ -33,6 +33,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // username
         String password = customUserDetails.getPassword();
 
+        // id
+        String id = customUserDetails.getId();
+
         // role
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -40,7 +43,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         // token = username + role
-        String token = jwtUtil.createJwt(password, role, 60*60*60L);
+        String token = jwtUtil.createJwt(password, role, id, 60*60*60L);
+
+        System.out.println(token);
 
         // 쿠키 방식 전달 + 프론트에 리다이렉트
         response.addCookie(createCookie("Authorization", token));
