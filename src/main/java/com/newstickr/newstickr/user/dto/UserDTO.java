@@ -1,5 +1,6 @@
 package com.newstickr.newstickr.user.dto;
 
+import com.newstickr.newstickr.user.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 

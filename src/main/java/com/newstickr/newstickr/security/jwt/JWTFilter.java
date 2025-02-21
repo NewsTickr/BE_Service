@@ -3,6 +3,7 @@ package com.newstickr.newstickr.security.jwt;
 import com.newstickr.newstickr.user.dto.CustomOAuth2User;
 import com.newstickr.newstickr.user.dto.UserDTO;
 
+import com.newstickr.newstickr.user.enums.Role;
 import jakarta.servlet.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -66,13 +67,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String password = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        Role role = jwtUtil.getRole(token);
         String id = jwtUtil.getId(token);
 
         //userDTO를 생성하여 값 set
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(password);
-        userDTO.setRole(role);
+        userDTO.setRole(role.getValue());
         userDTO.setId(id);
 
         //UserDetails에 회원 정보 객체 담기

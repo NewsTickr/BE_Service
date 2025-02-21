@@ -3,6 +3,7 @@ package com.newstickr.newstickr.security.config;
 import com.newstickr.newstickr.security.jwt.JWTFilter;
 import com.newstickr.newstickr.security.jwt.JWTUtil;
 import com.newstickr.newstickr.security.oauth2.CustomSuccessHandler;
+import com.newstickr.newstickr.user.enums.Role;
 import com.newstickr.newstickr.user.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -57,15 +58,16 @@ public class SecurityConfig {
 
         // CSRF 비활성화
         http.csrf(csrf -> csrf.disable());
+
         // 경로별 인가 설정
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/swagger-ui").permitAll()
-//                .requestMatchers("/swagger-ui/**").permitAll()
-//                .requestMatchers("/news/**").permitAll()
-//                .requestMatchers("/api/comments/**").permitAll()
+                .requestMatchers("/admin/users/**").hasAuthority(Role.ADMIN.getValue())  // 관리자 페이지 접근 제한 (ROLE_ADMIN 필요)
+
                 .anyRequest().authenticated()
         );
+
         // 로그인 및 인증 방식 비활성화
         http.formLogin(form -> form.disable());
         http.httpBasic(basic -> basic.disable());
