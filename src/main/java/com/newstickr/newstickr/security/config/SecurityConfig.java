@@ -6,6 +6,7 @@ import com.newstickr.newstickr.security.oauth2.CustomSuccessHandler;
 import com.newstickr.newstickr.user.enums.Role;
 import com.newstickr.newstickr.user.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.io.IOException;
 import java.util.Collections;
 
 @Configuration
@@ -37,21 +39,16 @@ public class SecurityConfig {
 
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                         CorsConfiguration configuration = new CorsConfiguration();
-
                         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
-
                         configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
                         return configuration;
                     }
                 }));
@@ -64,7 +61,6 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/swagger-ui").permitAll()
                 .requestMatchers("/admin/users/**").hasAuthority(Role.ADMIN.getValue())  // 관리자 페이지 접근 제한 (ROLE_ADMIN 필요)
-
                 .anyRequest().authenticated()
         );
 
@@ -81,7 +77,20 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler)
         );
 
-
+        // 예외 처리 설정
+        http.exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint((request, response, authException) -> {
+                    // 로그인되지 않은 사용자는 네이버 로그인 페이지로 이동
+                    response.sendRedirect("/oauth2/authorization/naver");
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    // 로그인은 했지만 ADMIN 권한이 없는 경우 403 응답
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"error\": \"ADMIN 권한이 없습니다.\"}");
+                })
+        );
 
         // 세션 상태 설정 (STATELESS)
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
