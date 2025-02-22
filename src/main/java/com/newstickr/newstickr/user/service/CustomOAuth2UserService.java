@@ -53,12 +53,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setName(oAuth2Response.getName());
             userEntity.setRole(Role.USER); // 신규 사용자는 default USER
 
-            userRepository.save(userEntity);
+            User user = userRepository.save(userEntity);
 
             UserDTO userDTO = new UserDTO();
 
-            userDTO.setUsername(username);
-            userDTO.setName(oAuth2Response.getName());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setName(user.getName());
+            userDTO.setId(String.valueOf(user.getId()));
             userDTO.setRole(Role.USER.getValue());
 
             return new CustomOAuth2User(userDTO);
@@ -68,12 +69,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             existData.setEmail(oAuth2Response.getEmail());
             existData.setName(oAuth2Response.getName());
 
-            userRepository.save(existData);
+            User user = userRepository.save(existData);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(existData.getUsername());
-            userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole(existData.getRole().getValue());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setName(user.getName());
+            userDTO.setRole(user.getRole().getValue());
+            userDTO.setId(String.valueOf(user.getId()));
 
             return new CustomOAuth2User(userDTO);
         }
