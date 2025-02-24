@@ -14,5 +14,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     // 제목에 특정 키워드가 포함된 게시글 검색 (대소문자 구분 없이 LIKE 사용)
     @Query("SELECT n FROM News n WHERE LOWER(n.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<News> findByTitleContainingIgnoreCase(@Param("title") String title);
-
+    List<News> findAllByUser_Id(Long id);
 }
