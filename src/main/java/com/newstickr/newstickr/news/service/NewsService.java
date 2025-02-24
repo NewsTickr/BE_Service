@@ -19,4 +19,6 @@ public interface NewsService {
     List<ResGetNewsDto> getAllNews();
 
     void deleteNewsPost(Long id);
+
+    String analyzeSentiment(String summary);
 }
