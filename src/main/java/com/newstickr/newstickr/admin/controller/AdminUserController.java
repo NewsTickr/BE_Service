@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
-    private final CommentService commentService;
     private final NewsService newsService;
 
 
@@ -54,7 +53,7 @@ public class AdminUserController {
     public ResponseEntity<?> deleteUserComment(
             @Parameter(description = "회원 ID", example = "2") @PathVariable Long userId,
             @Parameter(description = "댓글 ID", example = "10") @PathVariable Long commentId) {
-        boolean deleted = commentService.deleteComment(commentId, userId);
+        boolean deleted = adminUserService.AdmindeleteComment(commentId, userId);
         if (deleted) {
             return ResponseEntity.ok("Comment deleted successfully");
         } else {
