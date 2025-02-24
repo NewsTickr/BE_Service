@@ -31,7 +31,7 @@ public class NewsServiceImpl implements NewsService {
 
     // Groq 관련
     private final String apiKey = "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";
-    private static final String groqApiUrl = "https://api.groq.com/v1/chat/completions";
+    private static final String groqApiUrl = "https://api.groq.com/openai/v1/chat/completions";
 
     private final NewsRepository newsRepository;
 
@@ -114,7 +114,7 @@ public class NewsServiceImpl implements NewsService {
                 "model", "llama3-8b-8192",
                 "messages", List.of(
                         Map.of("role", "system", "content", "You are an AI that performs sentiment analysis on news summaries."),
-                        Map.of("role", "user", "content", "기사 요약 : " + summary + "\n2~3줄로 이 기사에 대한 감정 분석을 해줘.")
+                        Map.of("role", "user", "content", "기사 요약 : " + summary + "\n2~3줄로 이 기사에 대한 감정 분석을 한국어로 해줘.")
                 )
         );
         // HTTP 요청 헤더 설정
