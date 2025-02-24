@@ -32,7 +32,7 @@ public class News {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "analysis", nullable = false)
+    @Column(name = "analysis", columnDefinition = "LONGTEXT", nullable = false)
     private String analysis;
 
     @Column(name = "content", nullable = false)
