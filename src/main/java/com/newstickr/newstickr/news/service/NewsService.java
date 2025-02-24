@@ -14,5 +14,7 @@ public interface NewsService {
 
     List<ResGetNewsDto> searchNewsByTitle(String title);
 
+    List<ResGetNewsDto> getAllNews();
+
     void deleteNewsPost(Long id);
 }

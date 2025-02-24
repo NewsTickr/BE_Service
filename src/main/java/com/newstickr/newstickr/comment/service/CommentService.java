@@ -2,10 +2,12 @@ package com.newstickr.newstickr.comment.service;
 
 import com.newstickr.newstickr.comment.dto.CommentRequest;
 import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.dto.CommentResponseWithNews;
 import com.newstickr.newstickr.comment.entity.Comment;
 import com.newstickr.newstickr.comment.entity.CommentLike;
 import com.newstickr.newstickr.comment.repository.CommentLikeRepository;
 import com.newstickr.newstickr.comment.repository.CommentRepository;
+import com.newstickr.newstickr.news.dto.ResGetNewsDto;
 import com.newstickr.newstickr.news.entity.News;
 import com.newstickr.newstickr.news.repository.NewsRepository;
 import com.newstickr.newstickr.user.entity.User;
@@ -57,50 +59,16 @@ public class CommentService {
         }catch(Exception e){
             throw new RuntimeException(e);}
     }
-    // 특정 댓글 조회
-//    public CommentResponse getComment(Long commentId) {
-//        Optional<Comment> optional = commentRepository.findById(commentId);
-//        if (optional.isPresent()) {
-//            Comment comment = optional.get();
-//            CommentResponse commentResponse = new CommentResponse();
-//            commentResponse.setCommentId(commentId);
-//            commentResponse.setContent(comment.getContent());
-//            commentResponse.setLikeCount(comment.getLikeCount());
-//            commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-//            commentResponse.setUserId(comment.getUser().getId());
-//            commentResponse.setProfileImg(comment.getUser().getProfileImg());
-//            commentResponse.setUsername(comment.getUser().getUsername());
-//            return commentResponse;
-//        }
-//        throw new RuntimeException("No comment with id " + commentId); // 404 처리
-//    }
+
     // 특정 사용자가 쓴 댓글 모두 조회
-    public List<CommentResponse> getAllCommentsByUserId(Long userId) {
+    public List<CommentResponseWithNews> getAllCommentsByUserId(Long userId) {
         List<Comment> commentList =  commentRepository.findByUser_Id(userId);
-        return getCommentResponses(commentList);
+        return getCommentResponseWithNews(commentList);
     }
     // 특정 기사의 댓글 모두 조회
     public List<CommentResponse> getAllCommentsByNewsId(Long newsId) {
         List<Comment> commentList =  commentRepository.findByNews_NewsId(newsId);
         return getCommentResponses(commentList);
-    }
-
-    private List<CommentResponse> getCommentResponses(List<Comment> commentList) {
-        List<CommentResponse> response = new ArrayList<>();
-        for (Comment comment : commentList) {
-            CommentResponse commentResponse = new CommentResponse();
-            commentResponse.setCommentId(comment.getCommentId());
-            commentResponse.setContent(comment.getContent());
-            commentResponse.setLikeCount(comment.getLikeCount());
-            commentResponse.setCreatedAt(comment.getCreatedAt().toString());
-            commentResponse.setUserId(comment.getUser().getId());
-            commentResponse.setProfileImg(comment.getUser().getProfileImg());
-            commentResponse.setUsername(comment.getUser().getUsername());
-
-            response.add(commentResponse);
-        }
-
-        return response;
     }
 
     // 댓글 수정
@@ -172,7 +140,7 @@ public class CommentService {
     }
 
     // 사용자가 좋아요한 댓글들 조회
-    public List<CommentResponse> getLikedCommentsByUser(Long userId) {
+    public List<CommentResponseWithNews> getLikedCommentsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -182,6 +150,44 @@ public class CommentService {
                 .map(CommentLike::getComment)
                 .collect(Collectors.toList());
 
-        return getCommentResponses(comments);
+        return getCommentResponseWithNews(comments);
+    }
+
+    private List<CommentResponse> getCommentResponses(List<Comment> comments) {
+        List<CommentResponse> response = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponse commentResponse = new CommentResponse();
+            commentResponse.setCommentId(comment.getCommentId());
+            commentResponse.setContent(comment.getContent());
+            commentResponse.setLikeCount(comment.getLikeCount());
+            commentResponse.setCreatedAt(comment.getCreatedAt().toString());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
+
+            response.add(commentResponse);
+        }
+        return response;
+    }
+
+    private List<CommentResponseWithNews> getCommentResponseWithNews(List<Comment> comments) {
+        List<CommentResponseWithNews> response = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponseWithNews commentResponseWithNews = new CommentResponseWithNews();
+            CommentResponse commentResponse = new CommentResponse();
+            commentResponse.setCommentId(comment.getCommentId());
+            commentResponse.setContent(comment.getContent());
+            commentResponse.setLikeCount(comment.getLikeCount());
+            commentResponse.setCreatedAt(comment.getCreatedAt().toString());
+            commentResponse.setUserId(comment.getUser().getId());
+            commentResponse.setProfileImg(comment.getUser().getProfileImg());
+            commentResponse.setUsername(comment.getUser().getUsername());
+            // news, comment 응답 저장
+            commentResponseWithNews.setComment(commentResponse);
+            commentResponseWithNews.setNews(ResGetNewsDto.fromEntity(comment.getNews()));
+
+            response.add(commentResponseWithNews);
+        }
+        return response;
     }
 }

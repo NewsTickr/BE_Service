@@ -3,6 +3,7 @@ package com.newstickr.newstickr.comment.controller;
 
 import com.newstickr.newstickr.comment.dto.CommentRequest;
 import com.newstickr.newstickr.comment.dto.CommentResponse;
+import com.newstickr.newstickr.comment.dto.CommentResponseWithNews;
 import com.newstickr.newstickr.comment.service.CommentService;
 import com.newstickr.newstickr.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,8 +27,8 @@ public class CommentController {
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "User 댓글 조회", description = "사용자가 작성한 댓글을 리스트형태로 조회합니다.")
-    public ResponseEntity<List<CommentResponse>> getUserComment(@PathVariable Long userId) {
-        List<CommentResponse> response = commentService.getAllCommentsByUserId(userId);
+    public ResponseEntity<List<CommentResponseWithNews>> getUserComment(@PathVariable Long userId) {
+        List<CommentResponseWithNews> response = commentService.getAllCommentsByUserId(userId);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
     @GetMapping("/news/{newsId}")
@@ -102,7 +103,7 @@ public class CommentController {
 
     @GetMapping("/liked")
     @Operation(summary = "사용자가 죻아요한 댓글 조회", description = "회원 ID를 기준으로 좋아요 누른 모든 댓글들을 조회")
-    public ResponseEntity<List<CommentResponse>> getLikedComments(@RequestParam Long userId) {
+    public ResponseEntity<List<CommentResponseWithNews>> getLikedComments(@RequestParam Long userId) {
         return ResponseEntity.ok(commentService.getLikedCommentsByUser(userId));
     }
 

@@ -34,6 +34,13 @@ public class NewsController {
         return ResponseEntity.ok("News Post Created Successfully!!");
     }
 
+    @GetMapping("/")
+    @Operation(summary = "게시글 전체 조회", description = "게시글 목록을 조회합니다.")
+    public ResponseEntity<List<ResGetNewsDto>> getNews() {
+        List<ResGetNewsDto> newsList = newsService.getAllNews();
+        return ResponseEntity.ok(newsList);
+    }
+
     @GetMapping("/{title}")
     @Operation(summary = "게시글 검색하기", description = "키워드로 작성된 게시글을 검색합니다.")
     public ResponseEntity<List<ResGetNewsDto>> getNewsByTitle(@PathVariable String title) {
