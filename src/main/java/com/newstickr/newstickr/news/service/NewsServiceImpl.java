@@ -6,7 +6,9 @@ import com.newstickr.newstickr.news.dto.ReqPostNewsDto;
 import com.newstickr.newstickr.news.dto.ResGetNewsDto;
 import com.newstickr.newstickr.news.entity.News;
 import com.newstickr.newstickr.news.repository.NewsRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -20,18 +22,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Repository
+@Slf4j
 public class NewsServiceImpl implements NewsService {
 
     // 네이버 관련
-    private final String clientId = "ObFoodHkRv_jDEKKybn3";
-    private final String clientSecret = "75g75IsXuf";
-    private final String naverApiUrl = "https://openapi.naver.com/v1/search/news.json";
+    @Value("${api.naver.clientId}")
+    private String clientId;
+    @Value("${api.naver.clientSecret}")
+    private String clientSecret;
+    @Value("${api.naver.naverApiUrl}")
+    private String naverApiUrl;
 
     // Groq 관련
-    private final String apiKey = "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";
-    private static final String groqApiUrl = "https://api.groq.com/openai/v1/chat/completions";
+    @Value("${api.grog.apiKey}")
+    private String apiKey;
+    @Value("${api.grog.grogApiUrl}")
+    private String groqApiUrl;
 
     private final NewsRepository newsRepository;
 
@@ -43,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 요청 URL 생성
-        String url = UriComponentsBuilder.fromHttpUrl(naverApiUrl)
+        String url = UriComponentsBuilder.fromUriString(naverApiUrl)
                 .queryParam("query", query)
                 .queryParam("display", 8)
                 .queryParam("sort", "sim")
@@ -66,7 +74,7 @@ public class NewsServiceImpl implements NewsService {
         try {
             jsonNode = objectMapper.readTree(response.getBody());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
         return jsonNode;
@@ -90,12 +98,22 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public List<ResGetNewsDto> getAllNews() {
+        List<News> newsList = newsRepository.findAll();
+        return newsList.stream()
+                .map(ResGetNewsDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ResGetNewsDto> searchNewsByTitle(String title) {
         List<News> newsList = newsRepository.findByTitleContainingIgnoreCase(title);
         return newsList.stream()
                 .map(ResGetNewsDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
 
     @Override
     @Transactional
