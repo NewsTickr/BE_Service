@@ -44,8 +44,11 @@ public class AdminUserService {
     public boolean AdmindeleteComment(Long commentId, Long userId) {
         Optional<Comment> optional = commentRepository.findCommentByCommentId(commentId);
         if (optional.isPresent()) {
-            Comment comment = optional.get();
-            commentRepository.delete(comment);
+            // 1. 댓글과 연결된 좋아요 데이터 먼저 삭제
+            commentRepository.deleteLikesByCommentId(commentId);
+            // 2. 댓글 삭제
+            commentRepository.deleteById(commentId);
+
             return true;
         }
         return false;
