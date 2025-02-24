@@ -1,6 +1,8 @@
 package com.newstickr.newstickr.admin.service;
 
 import com.newstickr.newstickr.admin.dto.AdminUserListResponseDto;
+import com.newstickr.newstickr.comment.entity.Comment;
+import com.newstickr.newstickr.comment.repository.CommentRepository;
 import com.newstickr.newstickr.user.entity.User;
 import com.newstickr.newstickr.admin.repository.AdminUserRepository;
 import com.newstickr.newstickr.user.enums.Role;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class AdminUserService {
 
     private final AdminUserRepository adminUserRepository;
+    private final CommentRepository commentRepository;
 
     // 1. 전체 회원 조회
     public Page<AdminUserListResponseDto> getAllUsers(int page, int size) {
@@ -37,6 +40,20 @@ public class AdminUserService {
             throw new RuntimeException("User not found");
         }
     }
+
+    public boolean AdmindeleteComment(Long commentId, Long userId) {
+        Optional<Comment> optional = commentRepository.findCommentByCommentId(commentId);
+        if (optional.isPresent()) {
+            // 1. 댓글과 연결된 좋아요 데이터 먼저 삭제
+            commentRepository.deleteLikesByCommentId(commentId);
+            // 2. 댓글 삭제
+            commentRepository.deleteById(commentId);
+
+            return true;
+        }
+        return false;
+    }
+
 
     // username 제외
     private AdminUserListResponseDto convertToDto(User user) {

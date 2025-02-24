@@ -2,6 +2,8 @@ package com.newstickr.newstickr.admin.controller;
 
 import com.newstickr.newstickr.admin.dto.AdminUserListResponseDto;
 import com.newstickr.newstickr.admin.service.AdminUserService;
+import com.newstickr.newstickr.comment.service.CommentService;
+import com.newstickr.newstickr.news.service.NewsService;
 import com.newstickr.newstickr.user.enums.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
+    private final NewsService newsService;
+
 
     // 1. 전체 회원 조회 API
     @GetMapping("/info")
@@ -40,6 +44,33 @@ public class AdminUserController {
             return ResponseEntity.ok("User role updated successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid role value");
+        }
+    }
+
+    // 3. 댓글 삭제 API
+    @DeleteMapping("/{userId}/comments/{commentId}")
+    @Operation(summary = "회원 댓글 삭제", description = "관리자가 특정 사용자의 댓글을 삭제합니다.")
+    public ResponseEntity<?> deleteUserComment(
+            @Parameter(description = "회원 ID", example = "2") @PathVariable Long userId,
+            @Parameter(description = "댓글 ID", example = "10") @PathVariable Long commentId) {
+        boolean deleted = adminUserService.AdmindeleteComment(commentId, userId);
+        if (deleted) {
+            return ResponseEntity.ok("Comment deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to delete comment. Either comment does not exist or user mismatch.");
+        }
+    }
+
+    // 4. 뉴스 게시글 삭제 API
+    @DeleteMapping("/news/{newsId}")
+    @Operation(summary = "뉴스 게시글 삭제", description = "관리자가 특정 뉴스 게시글을 삭제합니다.")
+    public ResponseEntity<?> deleteNewsPost(
+            @Parameter(description = "뉴스 게시글 ID", example = "5") @PathVariable Long newsId) {
+        try {
+            newsService.deleteNewsPost(newsId);
+            return ResponseEntity.ok("News post deleted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Failed to delete news post. It may not exist.");
         }
     }
 }
