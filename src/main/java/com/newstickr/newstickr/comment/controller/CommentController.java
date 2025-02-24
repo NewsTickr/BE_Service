@@ -82,4 +82,28 @@ public class CommentController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    @PostMapping("/{commentId}/like")
+    @Operation(summary = "좋아요 기능", description = "좋아요 버튼을 누르면 좋아요 카운트 +1, 이미 좋아요한 버튼을 누르면 카운트 -1")
+    public ResponseEntity<String> likeComment(@PathVariable Long commentId, @RequestParam Long userId) {
+        boolean liked = commentService.likeComment(commentId, userId);
+        if (liked) {
+            return ResponseEntity.ok("좋아요 성공!");
+        } else {
+            return ResponseEntity.ok("좋아요 취소됨.");
+        }
+    }
+
+    @GetMapping("/{commentId}/liked")
+    @Operation(summary = "좋아요 여부 확인", description = "회원이 이미 좋아요를 눌렀는지 확인")
+    public ResponseEntity<Boolean> isCommentLiked(@PathVariable Long commentId, @RequestParam Long userId) {
+        return ResponseEntity.ok(commentService.isCommentLikedByUser(commentId, userId));
+    }
+
+    @GetMapping("/liked")
+    @Operation(summary = "사용자가 죻아요한 댓글 조회", description = "회원 ID를 기준으로 좋아요 누른 모든 댓글들을 조회")
+    public ResponseEntity<List<CommentResponse>> getLikedComments(@RequestParam Long userId) {
+        return ResponseEntity.ok(commentService.getLikedCommentsByUser(userId));
+    }
+
 }
