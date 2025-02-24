@@ -6,6 +6,8 @@ import com.newstickr.newstickr.news.dto.ReqPostNewsDto;
 import com.newstickr.newstickr.news.dto.ResGetNewsDto;
 import com.newstickr.newstickr.news.entity.News;
 import com.newstickr.newstickr.news.repository.NewsRepository;
+import com.newstickr.newstickr.user.entity.User;
+import com.newstickr.newstickr.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +45,7 @@ public class NewsServiceImpl implements NewsService {
     private String groqApiUrl;
 
     private final NewsRepository newsRepository;
-
+    private final UserRepository userRepository;
 
 
     @Override
@@ -82,8 +85,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional
-    public void createNewsPost(ReqPostNewsDto reqPostNewsDto) {
+    public void createNewsPost(ReqPostNewsDto reqPostNewsDto, Long userId) {
         String analysis = analyzeSentiment(reqPostNewsDto.description());
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+            throw new RuntimeException("사용자 없음.");
+        }
 
         News news = News.builder()
                 .link(reqPostNewsDto.link())
@@ -92,9 +99,19 @@ public class NewsServiceImpl implements NewsService {
                 .analysis(analysis)
                 .content(reqPostNewsDto.content())
                 .created_at(LocalDateTime.now())
+                .user(userOptional.get())
                 .build();
 
         newsRepository.save(news);
+    }
+
+    @Override
+    public List<ResGetNewsDto> searchNewsByUserId(Long userId) {
+        List<News> newsList = newsRepository.findAllByUser_Id(userId);
+
+        return newsList.stream()
+                .map(ResGetNewsDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override

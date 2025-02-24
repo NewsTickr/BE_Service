@@ -1,5 +1,6 @@
 package com.newstickr.newstickr.news.entity;
 
+import com.newstickr.newstickr.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,4 +42,8 @@ public class News {
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

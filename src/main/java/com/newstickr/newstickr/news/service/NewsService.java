@@ -10,7 +10,9 @@ public interface NewsService {
 
     JsonNode searchNews(String query);
 
-    void createNewsPost(ReqPostNewsDto reqPostNewsDto);
+    void createNewsPost(ReqPostNewsDto reqPostNewsDto, Long userId);
+
+    List<ResGetNewsDto> searchNewsByUserId(Long userId);
 
     List<ResGetNewsDto> searchNewsByTitle(String title);
 
