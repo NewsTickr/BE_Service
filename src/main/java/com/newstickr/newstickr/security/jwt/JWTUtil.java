@@ -1,6 +1,7 @@
 package com.newstickr.newstickr.security.jwt;
 
 import com.newstickr.newstickr.user.enums.Role;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,11 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        }catch (ExpiredJwtException e){
+            return false;
+        }
     }
 
     public String createJwt(String username, String role, String id, Long expiredMs) {
