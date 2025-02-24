@@ -3,6 +3,8 @@ package com.newstickr.newstickr.comment.service;
 import com.newstickr.newstickr.comment.dto.CommentRequest;
 import com.newstickr.newstickr.comment.dto.CommentResponse;
 import com.newstickr.newstickr.comment.entity.Comment;
+import com.newstickr.newstickr.comment.entity.CommentLike;
+import com.newstickr.newstickr.comment.repository.CommentLikeRepository;
 import com.newstickr.newstickr.comment.repository.CommentRepository;
 import com.newstickr.newstickr.news.entity.News;
 import com.newstickr.newstickr.news.repository.NewsRepository;
@@ -12,12 +14,14 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,6 +32,8 @@ public class CommentService {
     private NewsRepository newsRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CommentLikeRepository commentLikeRepository;
 
     @Builder
     // 댓글 추가
@@ -127,4 +133,55 @@ public class CommentService {
         return false;
     }
 
+    // 좋아요 기능
+    @Transactional
+    public boolean likeComment(Long commentId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        Optional<CommentLike> existingLike = commentLikeRepository.findByUserAndComment(user, comment);
+
+        if (existingLike.isPresent()) {
+            // 이미 좋아요를 눌렀다면 취소 (좋아요 삭제)
+            commentLikeRepository.delete(existingLike.get());
+            comment.setLikeCount(comment.getLikeCount() - 1);
+            commentRepository.save(comment);
+            return false;  // 좋아요 취소됨
+        } else {
+            // 새로운 좋아요 추가
+            CommentLike commentLike = new CommentLike(user, comment);
+            commentLikeRepository.save(commentLike);
+            comment.setLikeCount(comment.getLikeCount() + 1);
+            commentRepository.save(comment);
+            return true;  // 좋아요 추가됨
+        }
+    }
+
+    // 사용자가 댓글에 좋아요를 눌렀는지 확인
+    public boolean isCommentLikedByUser(Long commentId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        return commentLikeRepository.findByUserAndComment(user, comment).isPresent();
+    }
+
+    // 사용자가 좋아요한 댓글들 조회
+    public List<CommentResponse> getLikedCommentsByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<CommentLike> likedComments = commentLikeRepository.findByUser(user);
+
+        List<Comment> comments = likedComments.stream()
+                .map(CommentLike::getComment)
+                .collect(Collectors.toList());
+
+        return getCommentResponses(comments);
+    }
 }
