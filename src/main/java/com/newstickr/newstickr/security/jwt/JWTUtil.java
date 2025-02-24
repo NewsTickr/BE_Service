@@ -1,5 +1,6 @@
 package com.newstickr.newstickr.security.jwt;
 
+import com.newstickr.newstickr.user.enums.Role;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,19 +23,53 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }
 
-    public String getRole(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    public Role getRole(String token) {
+        try {
+            String roleString = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("role", String.class);
+
+            return Role.fromString(roleString);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid role value in token: " + e.getMessage());
+            return Role.USER; // 기본값 설정 (예: USER)
+        } catch (Exception e) {
+            System.err.println("Error parsing role from token: " + e.getMessage()); // 일반적인 예외 처리
+            throw new RuntimeException("Failed to extract role from token", e); // 필요하면 런타임 예외 던지기
+        }
+    }
+
+
+    /*
+    public Role getRole(String token) {
+        return Role.valueOf(
+                Jwts.parser()
+                        .verifyWith(secretKey)
+                        .build()
+                        .parseSignedClaims(token)
+                        .getPayload()
+                        .get("role", String.class)
+        );
+    }
+    */
+
+    public String getId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", String.class);
     }
 
     public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createJwt(String username, String role, String id, Long expiredMs) {
 
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
+                .claim("id", id)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
