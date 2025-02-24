@@ -17,3 +17,8 @@ test : 테스트 코드, 리펙토링 테스트 코드 추가
 chore : 빌드 업무 수정, 패키지 매니저 수정
 
 merge : 브랜치 병합
+
+# 임시 도커 사용법
+docker build -t gwangbu/be:latest .
+docker pull gwangbu/be:latest
+docker run -d -p 8085:8085 gwangbu/be:latest
