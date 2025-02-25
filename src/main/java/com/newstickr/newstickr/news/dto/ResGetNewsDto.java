@@ -11,6 +11,7 @@ public record ResGetNewsDto(
         String content,
         String userName,
         Long userId,
+        String profileImg,
         String date
 ) {
     public static ResGetNewsDto fromEntity(News news) {
@@ -23,6 +24,7 @@ public record ResGetNewsDto(
                 news.getContent(),
                 news.getUser().getName(),
                 news.getUser().getId(),
+                news.getUser().getProfileImg(),
                 news.getCreated_at().toString()
         );
     }
