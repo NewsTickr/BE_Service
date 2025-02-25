@@ -29,13 +29,13 @@ public class CommentController {
     @Operation(summary = "User 댓글 조회", description = "사용자가 작성한 댓글을 리스트형태로 조회합니다.")
     public ResponseEntity<List<CommentResponseWithNews>> getUserComment(@PathVariable Long userId) {
         List<CommentResponseWithNews> response = commentService.getAllCommentsByUserId(userId);
-        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @GetMapping("/news/{newsId}")
     @Operation(summary = "뉴스에 작성된 댓글 조회")
     public ResponseEntity<List<CommentResponse>> getNewsComment(@PathVariable String newsId) {
         List<CommentResponse> response = commentService.getAllCommentsByNewsId(Long.parseLong(newsId));
-        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     // 사용하지 않아도 될듯함.
 //    @GetMapping("/{commentId}")

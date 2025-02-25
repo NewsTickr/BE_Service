@@ -58,8 +58,8 @@ public class SecurityConfig {
         // 경로별 인가 설정
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/news/post", "/admin/users/news/").authenticated()
-                .requestMatchers("/swagger-ui","/news/**").permitAll()
+                .requestMatchers("/news/post", "/admin/users/news/","/api/comment/").authenticated()
+                .requestMatchers("/swagger-ui","/news/**","/api/comment/**").permitAll()
                 .requestMatchers("/admin/users/**").hasAuthority(Role.ADMIN.getValue())  // 관리자 페이지 접근 제한 (ROLE_ADMIN 필요)
                 .anyRequest().authenticated()
         );
