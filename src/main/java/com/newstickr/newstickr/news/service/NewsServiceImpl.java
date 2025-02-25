@@ -86,7 +86,6 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Transactional
     public void createNewsPost(ReqPostNewsDto reqPostNewsDto, Long userId) {
-        String analysis = analyzeSentiment(reqPostNewsDto.description());
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty()){
             throw new RuntimeException("사용자 없음.");
@@ -96,7 +95,7 @@ public class NewsServiceImpl implements NewsService {
                 .link(reqPostNewsDto.link())
                 .title(reqPostNewsDto.title())
                 .description(reqPostNewsDto.description())
-                .analysis(analysis)
+                .analysis(reqPostNewsDto.analysis())
                 .content(reqPostNewsDto.content())
                 .created_at(LocalDateTime.now())
                 .user(userOptional.get())
@@ -141,6 +140,7 @@ public class NewsServiceImpl implements NewsService {
         newsRepository.deleteById(id);
     }
 
+    @Override
     public String analyzeSentiment(String summary) {
         RestTemplate restTemplate = new RestTemplate();
 

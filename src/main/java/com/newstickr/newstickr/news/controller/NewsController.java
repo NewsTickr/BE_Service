@@ -1,6 +1,7 @@
 package com.newstickr.newstickr.news.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.newstickr.newstickr.news.dto.ReqAnalyzeDto;
 import com.newstickr.newstickr.news.dto.ReqPostNewsDto;
 import com.newstickr.newstickr.news.dto.ResGetNewsDto;
 import com.newstickr.newstickr.news.service.NewsService;
@@ -71,5 +72,12 @@ public class NewsController {
     public ResponseEntity<String> deleteNewsPost(@PathVariable Long id) {
         newsService.deleteNewsPost(id);
         return ResponseEntity.ok("News Post Deleted Successfully!!");
+    }
+
+    @PostMapping("/analysis")
+    @Operation(summary = "감정 분석해주기", description = "요약본을 제공하면 감정 분석 결과를 알려줍니다.")
+    public ResponseEntity<String> getAnalysis(@RequestBody ReqAnalyzeDto reqAnalyzeDto) {
+        String analysis = newsService.analyzeSentiment(reqAnalyzeDto.summary());
+        return ResponseEntity.ok(analysis);
     }
 }
