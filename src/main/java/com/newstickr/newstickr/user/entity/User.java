@@ -17,7 +17,7 @@ public class User {
 
     private String name;
 
-    private String profileImg; // 프로필 이미지 경로
+    private String profileImg = "default"; // 프로필 이미지 경로
 
     private String email;
 

@@ -16,9 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -65,12 +62,15 @@ public class UserController {
     @Operation(summary = "유저 프로필 이미지를 조회", description = "img 태그의 src에 {ip}:{port}/user/profile/{filePath}를 넣는 형태로 사용")
     public ResponseEntity<Resource> getUserProfile(@PathVariable String filePath) {
         try {
-            String decodedFilePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8);
-            Resource result = fileService.getImg(decodedFilePath);
+//            String decodedFilePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8);
+            Resource result = fileService.getImg(filePath);
             if(result == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return ResponseEntity.ok().body(result);
+            String extension = fileService.getFileExtension(filePath);
+            MediaType mediaType = fileService.getMediaType(extension);
+
+            return ResponseEntity.ok().contentType(mediaType).body(result);
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -81,9 +81,9 @@ public class UserController {
     @Operation(summary = "회원 정보 조회를 사용하여얻은 filePaht로 이미지를 다운로드")
     public ResponseEntity<Resource> downloadUserProfile(@PathVariable String filePath) {
         try{
-            String decodedFilePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8);
+//            String decodedFilePath = URLDecoder.decode(filePath, StandardCharsets.UTF_8);
             // 디코딩된 경로를 이용해 파일을 읽음
-            return fileService.downloadImg(decodedFilePath);
+            return fileService.downloadImg(filePath);
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

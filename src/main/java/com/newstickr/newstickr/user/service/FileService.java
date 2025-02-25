@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,18 +55,20 @@ public class FileService {
     public ResponseEntity<Resource> downloadImg(String fileName){
         Resource resource = getImg(fileName);
 
-        if(resource.exists() || resource.isReadable()) {
-            String contentDisposition = "attachment; filename=\""+resource.getFilename()+"\"";
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                    .body(resource);
+        if (resource == null){
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        String extension = getFileExtension(fileName);
+        MediaType mediaType = getMediaType(extension);
+        return ResponseEntity.ok()
+                .contentType(mediaType)  // Adjust based on the file type
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .body(resource);
     }
     public String uploadImg(MultipartFile file) {
         //확장자는 자유 추후 결정
         String fileExtension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
-        String fileName = UUID.randomUUID() + "." + fileExtension;
+        String fileName = UUID.randomUUID() + "."+ fileExtension;
         String filePath = uploadDir + fileName;
         File targetFile = new File(filePath);
         if(!targetFile.getParentFile().exists()){
@@ -77,12 +80,13 @@ public class FileService {
             log.error(e.getMessage());
             return null;
         }
+        log.info(fileName);
         return fileName;
     }
 
-    private String getFileExtension(String fileName){
+    public String getFileExtension(String fileName){
         int dotIndex = fileName.lastIndexOf('.');
-        return dotIndex > 0 ? fileName.substring(dotIndex) : "";
+        return dotIndex > 0 ? fileName.substring(dotIndex+1) : "";
     }
 
     private Resource getDefaultImage(){
@@ -93,4 +97,14 @@ public class FileService {
             return null;
         }
     }
+
+    public MediaType getMediaType(String extension){
+        return switch (extension) {
+            case "png" -> MediaType.IMAGE_PNG;
+            case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
+            case "gif" -> MediaType.IMAGE_GIF;
+            default -> MediaType.APPLICATION_OCTET_STREAM;
+        };
+    }
+
 }

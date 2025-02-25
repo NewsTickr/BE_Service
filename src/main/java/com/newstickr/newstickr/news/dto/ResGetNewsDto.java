@@ -10,7 +10,8 @@ public record ResGetNewsDto(
         String analysis,
         String content,
         String userName,
-        Long userId
+        Long userId,
+        String date
 ) {
     public static ResGetNewsDto fromEntity(News news) {
         return new ResGetNewsDto(
@@ -21,7 +22,8 @@ public record ResGetNewsDto(
                 news.getAnalysis(),
                 news.getContent(),
                 news.getUser().getUsername(),
-                news.getUser().getId()
+                news.getUser().getId(),
+                news.getCreated_at().toString()
         );
     }
 }
