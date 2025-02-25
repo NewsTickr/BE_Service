@@ -76,7 +76,7 @@ public class CommentService {
         Optional<Comment> optional = commentRepository.findById(commentId);
         if (optional.isPresent()) {
             Comment newComment = optional.get();
-            if (newComment.getUser().getId().equals(userId)) {
+            if (newComment.getUser().getId() == null || !newComment.getUser().getId().equals(userId)) {
                 log.info("댓글 작성자와 jwt의 userId가 달라 거부");
                 return false;
             }
@@ -91,7 +91,7 @@ public class CommentService {
         Optional<Comment> optional = commentRepository.findCommentByCommentId(commentId);
         if (optional.isPresent()) {
             Comment comment = optional.get();
-            if (comment.getUser().getId().equals(userId)) {
+            if (comment.getUser().getId() == null||!comment.getUser().getId().equals(userId)) {
                 log.info("댓글 작성자와 jwt의 userId가 달라 거부");
                 return false;
             }
