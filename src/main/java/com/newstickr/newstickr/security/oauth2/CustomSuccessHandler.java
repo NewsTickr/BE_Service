@@ -1,7 +1,8 @@
 package com.newstickr.newstickr.security.oauth2;
 
-import com.newstickr.newstickr.user.dto.CustomOAuth2User;
 import com.newstickr.newstickr.security.jwt.JWTUtil;
+import com.newstickr.newstickr.user.dto.CustomOAuth2User;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,9 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
-import jakarta.servlet.ServletException;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -58,7 +58,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setMaxAge(60 * 60 * 24 * 30);
         //cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
 
         return cookie;
     }

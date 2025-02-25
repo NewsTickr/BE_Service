@@ -25,7 +25,7 @@ public class AuthController {
     public ResponseEntity<String> logout(HttpServletResponse response) {
         // JWT 삭제를 위해 쿠키 무효화
         Cookie cookie = new Cookie("Authorization", null);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0); // 즉시 만료
