@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.io.IOException;
 import java.util.Collections;
 
 @Configuration
@@ -59,7 +58,8 @@ public class SecurityConfig {
         // 경로별 인가 설정
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/swagger-ui").permitAll()
+                .requestMatchers("/news/post", "/admin/users/news/").authenticated()
+                .requestMatchers("/swagger-ui","/news/**").permitAll()
                 .requestMatchers("/admin/users/**").hasAuthority(Role.ADMIN.getValue())  // 관리자 페이지 접근 제한 (ROLE_ADMIN 필요)
                 .anyRequest().authenticated()
         );
