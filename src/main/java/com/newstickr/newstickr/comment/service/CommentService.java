@@ -163,7 +163,7 @@ public class CommentService {
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
             commentResponse.setUserId(comment.getUser().getId());
             commentResponse.setProfileImg(comment.getUser().getProfileImg());
-            commentResponse.setUsername(comment.getUser().getUsername());
+            commentResponse.setUsername(comment.getUser().getName());
 
             response.add(commentResponse);
         }
@@ -181,7 +181,7 @@ public class CommentService {
             commentResponse.setCreatedAt(comment.getCreatedAt().toString());
             commentResponse.setUserId(comment.getUser().getId());
             commentResponse.setProfileImg(comment.getUser().getProfileImg());
-            commentResponse.setUsername(comment.getUser().getUsername());
+            commentResponse.setUsername(comment.getUser().getName());
             // news, comment 응답 저장
             commentResponseWithNews.setComment(commentResponse);
             commentResponseWithNews.setNews(ResGetNewsDto.fromEntity(comment.getNews()));

@@ -21,7 +21,7 @@ public record ResGetNewsDto(
                 news.getDescription(),
                 news.getAnalysis(),
                 news.getContent(),
-                news.getUser().getUsername(),
+                news.getUser().getName(),
                 news.getUser().getId(),
                 news.getCreated_at().toString()
         );

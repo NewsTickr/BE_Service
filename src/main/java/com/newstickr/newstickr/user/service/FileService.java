@@ -1,5 +1,6 @@
 package com.newstickr.newstickr.user.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -19,11 +20,25 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+
 public class FileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 //    private final String defaultImgUrl = "src/main/resources/static/defaultProfileImg.svg";
 
+    @PostConstruct
+    public void init(){
+        File uploadDirectory = new File(uploadDir);
+        if(!uploadDirectory.exists()){
+            boolean created = uploadDirectory.mkdirs();
+            if(!created){
+                log.info("업로드 디렉토리가 생성되었습니다:{}", uploadDir);
+            }
+            else {
+                log.error("업로드 디렉토리 생성에 실패했습니다:{}", uploadDir);
+            }
+        }
+    }
     public Resource getImg(String fileName){
         try{
             Path path = Paths.get(uploadDir + fileName);
