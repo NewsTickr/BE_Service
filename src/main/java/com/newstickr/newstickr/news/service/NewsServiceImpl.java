@@ -134,10 +134,13 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Transactional
     public void deleteNewsPost(Long id) {
-        if (!newsRepository.existsById(id)){
+        Optional<News> newsOptional = newsRepository.findById(id);
+        if (newsOptional.isEmpty()) {
             throw new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다.");
         }
-        newsRepository.deleteById(id);
+        News news = newsOptional.get();
+
+        newsRepository.delete(news);
     }
 
     @Override
