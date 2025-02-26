@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +50,7 @@ public class CommentService {
         News news = optionalNews.get();
         try{
             Comment comment = new Comment();
-            comment.setContent(URLEncoder.encode(commentRequest.getContent(), StandardCharsets.UTF_8));
+            comment.setContent(commentRequest.getContent());
             comment.setUser(user);
             comment.setNews(news);
             commentRepository.save(comment);
