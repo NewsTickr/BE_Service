@@ -15,4 +15,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     @Query("SELECT n FROM News n WHERE LOWER(n.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<News> findByTitleContainingIgnoreCase(@Param("title") String title);
     List<News> findAllByUser_Id(Long id);
+
+    List<News> findAllByUserIdOrderByNewsIdDesc(Long userId);
+    List<News> findAllByOrderByNewsIdDesc();
 }

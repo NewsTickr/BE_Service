@@ -62,12 +62,12 @@ public class CommentService {
 
     // 특정 사용자가 쓴 댓글 모두 조회
     public List<CommentResponseWithNews> getAllCommentsByUserId(Long userId) {
-        List<Comment> commentList =  commentRepository.findByUser_Id(userId);
+        List<Comment> commentList =  commentRepository.findAllByUserIdOrderByCommentIdDesc(userId);
         return getCommentResponseWithNews(commentList);
     }
     // 특정 기사의 댓글 모두 조회
     public List<CommentResponse> getAllCommentsByNewsId(Long newsId) {
-        List<Comment> commentList =  commentRepository.findByNews_NewsId(newsId);
+        List<Comment> commentList =  commentRepository.findByNewsNewsIdOrderByCommentIdDesc(newsId);
         return getCommentResponses(commentList);
     }
 

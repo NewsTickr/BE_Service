@@ -97,7 +97,7 @@ public class NewsServiceImpl implements NewsService {
                 .description(reqPostNewsDto.description())
                 .analysis(reqPostNewsDto.analysis())
                 .content(reqPostNewsDto.content())
-                .created_at(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .user(userOptional.get())
                 .build();
 
@@ -106,7 +106,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<ResGetNewsDto> searchNewsByUserId(Long userId) {
-        List<News> newsList = newsRepository.findAllByUser_Id(userId);
+        List<News> newsList = newsRepository.findAllByUserIdOrderByNewsIdDesc(userId);
 
         return newsList.stream()
                 .map(ResGetNewsDto::fromEntity)
@@ -115,7 +115,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<ResGetNewsDto> getAllNews() {
-        List<News> newsList = newsRepository.findAll();
+        List<News> newsList = newsRepository.findAllByOrderByNewsIdDesc();
         return newsList.stream()
                 .map(ResGetNewsDto::fromEntity)
                 .collect(Collectors.toList());
