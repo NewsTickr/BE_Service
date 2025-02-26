@@ -25,7 +25,7 @@ public record ResGetNewsDto(
                 news.getUser().getName(),
                 news.getUser().getId(),
                 news.getUser().getProfileImg(),
-                news.getCreated_at().toString()
+                news.getCreatedAt().toString()
         );
     }
 }
