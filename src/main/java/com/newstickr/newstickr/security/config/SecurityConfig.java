@@ -59,7 +59,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/news/post", "/admin/users/news/","/api/comment/").authenticated()
-                .requestMatchers("/swagger-ui","/news/**","/api/comment/**").permitAll()
+                .requestMatchers("/swagger-ui","/news/**","/api/comment/**","/auth/logout").permitAll()
                 .requestMatchers("/admin/users/**").hasAuthority(Role.ADMIN.getValue())  // 관리자 페이지 접근 제한 (ROLE_ADMIN 필요)
                 .anyRequest().authenticated()
         );
