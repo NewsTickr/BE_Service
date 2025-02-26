@@ -49,7 +49,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 쿠키 방식 전달 + 프론트에 리다이렉트
         response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect("http://localhost/");
     }
 
     private Cookie createCookie(String key, String value) {
